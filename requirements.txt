@@ -1,0 +1,4 @@
+google-cloud-storage
+pandas
+pyarrow
+apache-beam[gcp]==2.65.0

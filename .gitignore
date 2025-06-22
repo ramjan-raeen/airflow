@@ -1,0 +1,5 @@
+#Ignore folder and its contents
+keys/
+*.env
+config/
+logs/

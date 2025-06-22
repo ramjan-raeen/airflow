@@ -3,3 +3,8 @@ keys/
 *.env
 config/
 logs/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd

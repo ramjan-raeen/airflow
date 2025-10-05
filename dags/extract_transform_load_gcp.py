@@ -1,3 +1,7 @@
+# To execute dags using airflow command to need to pass logical-date as param instead execution_date as default
+# airflow dags trigger extract_transform_load_gcs_to_gbq --logical-date "$(date -Iseconds)"
+
+
 from datetime import datetime, timedelta
 
 from airflow import DAG

@@ -1,13 +1,28 @@
+import random
+import pendulum
+
+
+from datetime import datetime, timedelta
+
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.operators.python import BranchPythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-import random
-from datetime import datetime, timedelta
 
+def is_weekend():
+    # Airflow's default timezone is UTC
+    # utc_now = pendulum.now("UTC")
+    local_now = pendulum.now("Asia/Kolkata")
+    current_day = local_now.weekday()  # Monday is 0 and Sunday is 6
+    if current_day >= 5:  # Saturday or Sunday
+        print(f"It is the weekend!- And Day No: {current_day}")
+        return True
+    else:
+        print(f"It is a weekday!- And Day No: {current_day}")
+        return False
 def even_number_list(ti):
     num_range = ti.xcom_pull(task_ids='filter_even_odd', key='choose_arbitrary_number')
     lst = [i for i in range(num_range) if i % 2 == 0]
@@ -80,9 +95,13 @@ with DAG(
         task_id = 'odd_number_task',
         python_callable= odd_number_list
     )
+    short_circuit_task = ShortCircuitOperator(
+        task_id='short_circuit_task',
+        python_callable= is_weekend
+    )
     task_05 = EmptyOperator(
         task_id='end',
         trigger_rule=TriggerRule.ONE_SUCCESS
     )
 
-start >> bash_task >> task_01 >> task_02 >> [task_03, task_04] >> task_05
+start >> bash_task >> task_01 >> short_circuit_task >> task_02 >> [task_03, task_04] >> task_05

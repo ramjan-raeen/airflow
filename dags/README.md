@@ -48,9 +48,10 @@ Cloud Composer is a fully managed Airflow service by Google Cloud, meaning Googl
 ## Cloud Composer Commands
 | **Service Name** | **gcloud command**|
 |------------------|-------------------|
-|Create Composer Environement | `gcloud composer environments create hands-on-comp-env --location asia-south1  --image-version composer-2.15.1-airflow-2.9.3 --service-account composer-sa@hands-on-dev-202409.iam.gserviceaccount.com`|
+|Create Composer Environement | `gcloud composer environments create hands-on-comp-env --location asia-south1  --image-version composer-2.15.1-airflow-2.9.3 --service-account composer-sa@$PROJECT_ID.gserviceaccount.com`|
 | Create Service Account | `gcloud iam service-account create composer-sa` |
-| Add policy for Agent | `gcloud projects add-iam-policy-binding $PROJECT_ID --member "serviceAccount:service-550059806476@cloudcomposer-accounts.iam.gserviceaccount.com" --role "roles/composer.ServiceAgentV2Ext"`|
+| Get Project Number | `PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")`|
+| Add policy for Agent | `gcloud projects add-iam-policy-binding $PROJECT_ID --member "serviceAccount:service-$PROJECT_NUMBER@cloudcomposer-accounts.iam.gserviceaccount.com" --role "roles/composer.ServiceAgentV2Ext"`|
 | **Trigger DAG** | `gcloud composer environments run hands-on-comp-env --location asia-south1 dags trigger -- test_composer_env`|
 |**Composer Worker**| `gcloud projects add-iam-policy-binding $PROJECT_ID --member "serviceAccount:composer-sa@$PROJECT_ID.iam.gserviceaccount.com" --role "roles/composer.worker"`|
 | **Storage Admin** | `gcloud projects add-iam-policy-binding $PROJECT_ID --member "serviceAccount:composer-sa@$PROJECT_ID.iam.gserviceaccount.com" --role "roles/storage.admin"`|

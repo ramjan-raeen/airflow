@@ -8,3 +8,4 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+dags/.DS_Store
